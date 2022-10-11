@@ -1,0 +1,51 @@
+{
+  "m_i": [3, 1, 0, 0],
+  
+  "Places": [
+    { "name": "p0"
+    , "tokens": 3 },
+    { "name": "p1"
+    , "tokens": 1 },
+    { "name": "p2"
+    , "tokens": 0 },
+    { "name": "p3"
+    , "tokens": 0 }
+  ],
+  "Transitions": [
+    "t0", 
+    "t1"],
+  
+  "Transitions_input": [
+    { "place": "p0"
+    , "weight": 1, 
+    "transition": "t0" },
+    { "place": "p1"
+    , "weight": 1
+    , "transition": "t0" },
+    { "place": "p2"
+    , "weight": 1
+    , "transition": "t1" }
+  ],
+
+
+  "Transitions_output": [
+    { "transition": "t0", 
+    "place": "p2", 
+    "weight": 1 },
+    { "transition": "t1", 
+    "place": "p1",
+     "weight": 1 },
+    { "transition": "t1"
+    , "place": "p3"
+    , "weight": 1 }
+  ],
+  "shot":[
+    "t3"
+  ],
+
+  "burst": [
+    "t3",
+    "t0",
+    "t2"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "m_i": [1, 0, 0, 2, 1],
+  
+  "Places": [
+    { "name": "p0"
+    , "tokens": 1 },
+    { "name": "p1"
+    , "tokens": 0 },
+    { "name": "p2"
+    , "tokens": 0 },
+    { "name": "p3"
+    , "tokens": 2 },
+    { "name": "p4"
+    , "tokens": 1 }
+  ],
+  "Transitions": [
+    "t0", 
+    "t1", 
+    "t2", 
+    "t3"],
+  
+  "Transitions_input": [
+    { "place": "p0"
+    , "weight": 1, 
+    "transition": "t0" },
+    { "place": "p1"
+    , "weight": 1
+    , "transition": "t1" },
+    { "place": "p2"
+    , "weight": 1
+    , "transition": "t1" },
+    { "place": "p3"
+    , "weight": 2
+    , "transition": "t2" },
+    { "place": "p4"
+    , "weight": 1
+    , "transition": "t3" }
+  ],
+
+
+  "Transitions_output": [
+    { "transition": "t0", 
+    "place": "p1", 
+    "weight": 1 },
+    { "transition": "t0", 
+    "place": "p2",
+     "weight": 1 },
+    { "transition": "t0"
+    , "place": "p3"
+    , "weight": 2 },
+    { "transition": "t1"
+    , "place": "p1"
+    , "weight": 1 },
+    { "transition": "t2"
+    , "place": "p4"
+    , "weight": 1 },
+    { "transition": "t3"
+    , "place": "p3"
+    , "weight": 1 },
+    { "transition": "t3"
+    , "place": "p2"
+    , "weight": 1 }
+  ],
+  "shot":[
+    "t3"
+  ],
+
+  "burst": [
+    "t3",
+    "t0",
+    "t2"
+  ]
+}

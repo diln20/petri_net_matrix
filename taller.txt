@@ -1,0 +1,133 @@
+﻿TALLER. CONCEPTOS SEGURIDAD DE LA INFORMACION
+
+1.	Defina seguridad de la información
+2.	Defina sistema de información
+3.	Qué es un dato
+4.	Qué es una vulnerabilidad
+5.	Mencione y explique los principios de seguridad de la información
+6.	Defina es  adware
+7.	Qué es una advertencia 
+8.	Qué es una alerta
+9.	Qué es un amenaza
+10.	Defina amenaza interna
+11.	Defina amenaza externa
+12.	Defina antispam
+13.	Defina antivirus
+14.	Defina Arquitectura de seguridad
+15.	Defina ataques web
+16.	Qué es autenticación
+17.	Defina caballo de trolla
+18.	Que es un certificado
+19.	Defina encriptación
+20.	Defina ciberdelito
+21.	Defina contraseña
+22.	Defina firewall
+23.	Defina ingeniería social
+24.	Defina malware
+25.	Defina DoS
+26.	Defina phishing
+27.	Defina riesgos en seguridad de la información
+28.	Defina spam
+29.	Defina virus
+
+
+
+if(tr == "t1"):
+            for i in range(len(lugares)):
+                lugares[i].tokens = lugares[i].tokens + maxd[0][i]
+
+30.     Defenia que es politioca de seguridad
+
+
+rue
+
+
+
+
+
+
+        for i in range(len(burst)):
+            di = np.array([1, 0, 1, 1])
+            print(burst[i])
+            ej = np.zeros(4)
+            ej[int(burst[i].replace("t",""))] = 1
+            print("ej", ej)
+            disparo = m_inicial+np.dot(ej, maxd)
+            print("disparo", disparo)
+            return disparo
+
+
+    for transi in transitions_input:
+            for i in range(len(lugares)):
+                if transi.place == lugares[i].nombre:
+                    if transi.weight <= lugares[i].tokens:
+                        enabl.append(transi.transitio)
+                    print("transicion habilitada", transi.transitio)
+                else:
+                    print("transicion no habilitada", transi.transitio)
+
+
+
+
+
+
+ v=[1,0,0,0]
+        print("ej",ej)
+        print("m_inicial",)
+        print("hola",)
+        a=np.dot(v, maxinput)
+        b=m_inicial
+        print((b>=a).all())
+
+
+
+
+  print("dad", t)
+            ej = np.zeros(n)
+            ej[t] = 1
+            print()
+            disparo = m_inicial+np.dot(ej, maxd)
+            print("inicial", lugares)
+            for i in range(len(lugares)):
+                up = disparo[i]
+                petry.Place.update_tokens(lugares[i], up)
+            print("lugares", lugares)
+            print("disparo", disparo)
+            return disparo
+
+
+
+
+  t = int(tr[0].replace("t", ""))
+            print("dad",t)
+            ej = np.zeros(n)
+            ej[t] = 1
+            print()
+            disparo = m_inicial+np.dot(ej, maxd)
+            print("inicial", lugares)
+            for i in range(len(lugares)):
+                up = disparo[i]
+                petry.Place.update_tokens(lugares[i], up)
+            print("lugares", lugares)
+            print("disparo", disparo)
+            return disparo
+        else:
+            return print("no disponiblesg")
+
+
+
+
+print("rafaga:", burst)
+        #ej = np.zeros(t)
+        ej = [1, 0, 1, 1]
+        for i in range(len(burst)):
+            print()
+            print("burst", burst[i])
+            print()
+            ej[int(burst[i].replace("t", ""))] = 1
+            print("ej", ej)
+            disparo = lugares[i].tokens+np.dot(ej, maxd)
+            for i in range(len(lugares)):
+                up = disparo[i]
+                petry.Place.update_tokens(lugares[i], up)
+            print("disparo", disparo)

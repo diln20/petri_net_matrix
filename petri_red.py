@@ -162,7 +162,7 @@ class Arc:
         else:
             return ("no permite disparar")
 
-    #disparar en orden rafaga
+    #disparar en orden rafagas
     def disparar_rafaga(lugares, transicions, maxd, rafaga, maxinput):
         m_actual = []
         ej = np.zeros(len(transicions))

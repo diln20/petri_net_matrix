@@ -16,7 +16,6 @@ class PetriNet:
         lugares = []
         m_inicial = []
         transitions = []
-        m_actual = []
         shot = []
         burst = []
         #print("Red inicial")
@@ -35,7 +34,6 @@ class PetriNet:
             burst.append(s)
         for sh in red_petri['shot']:
             shot.append(sh)
-        print(burst)
         transitions_input = Arc.crear_arco(
             red_petri, "Transitions_input", lugares)
         transitions_out = Arc.crear_arco(
@@ -43,6 +41,8 @@ class PetriNet:
         maxinput = Arc.matrixinput(transitions_input, lugares, transitions)
         maxout = Arc.matrixout(transitions_out, lugares, transitions)
         maxd = Arc.matrixdmax(maxinput, maxout)
+        rafaga = ["t2", "t1", "t2", "t1", "t0"]
+        Arc.disparar_rafaga_final(lugares, transitions, maxd, rafaga, maxinput)
         #gf.graviz.grafico_inicial(lugares, transitions,  maxinput, maxout)
         #print("Matriz Dmax")
         # print()
@@ -58,12 +58,15 @@ class PetriNet:
         #rafaga(m_inicial, maxd, burst)
         # m_actual = Arc.disparo_t(
         #    lugares, m_inicial, maxd, shot, enable_transition, len(transitions), maxinput, maxout)
-        print("marcacion actual", m_actual)
+        #print("marcacion actual", m_actual)
         #gf.graviz.grafico_disparo(lugares, transitions,  maxinput, maxout)
         # print()
-        raf = Arc.rafaga(lugares, m_inicial, maxd, burst,
-                         len(transitions), maxinput)
+        # raf = Arc.rafaga(lugares, m_inicial, maxd, burst,
+        #                  len(transitions), maxinput)
         #gf.graviz.grafico_disparo(lugares, transitions,  maxinput, maxout)
+        #t = Arc.verificar_t(lugares, maxinput, len(transitions),"t2")
+        # print("validacion",t)
+        #Arc.disparar(lugares, maxd, "t2",maxinput, len(transitions))
         return print()
 
 
@@ -82,7 +85,7 @@ class Arc:
                     if tr.transitio == transitions[i] and tr.place == lugares[j].nombre and tr.weight >= 1:
                         max[i][j] = tr.weight
         # print(max)
-        return(max)
+        return (max)
 
     def matrixout(transitions_out, lugares, transitions):
         m = len((transitions))
@@ -97,7 +100,7 @@ class Arc:
                 for j in range(n):
                     if tr.transitio == transitions[i] and tr.place == lugares[j].nombre and tr.weight >= 1:
                         max[i][j] = tr.weight
-        return(max)
+        return (max)
 
     def verificar_rafaga(burst, enable_transition):
         shot_check = []
@@ -114,8 +117,8 @@ class Arc:
         transis = []
         for t_i in red_petri[transi]:
             for p in range(len(red_petri['Places'])):
-                if(t_i['place'] == pl[p].nombre):
-                    if(transi == "Transitions_input"):
+                if (t_i['place'] == pl[p].nombre):
+                    if (transi == "Transitions_input"):
                         transis.append(petry.input_transitions(
                             t_i['place'], pl[p].tokens, t_i['transition'], t_i['weight']))
                     else:
@@ -123,98 +126,85 @@ class Arc:
                             t_i['transition'], t_i['place'],  pl[p].tokens, t_i['weight']))
         return transis
 
-    def disparo_t(lugares, m_inicial, maxd, tr, enable_transition, n, maxinput, maxout):
-        print("trans", tr)
-        print("transissdda", enable_transition)
-        for i in range(len(tr)):
-            if tr[i] in enable_transition:
-                t = int(tr[0].replace("t", ""))
-                ej = np.zeros(n)
-                ej[t] = 1
-                k = [0, 1, 2, 5, 0]
-                disparo = m_inicial+np.dot(ej, maxd)
-                print("inicial", lugares)
-                for i in range(len(lugares)):
-                    up = disparo[i]
-                    petry.Place.update_tokens(lugares[i], up)
-                    # petry.input_transitions.update_weight(transitions_input[i],up)
-                    # petry.out_transitions.update_weight(transitions_out[i],up)
-                print("lugares", lugares)
-                print("disparo", disparo)
-                return disparo
-            else:
-                print("no se puede disparar la transicion")
-
-    def rafaga(lugares, m_inicial, maxd, burst, t,maxinput):
-        print("rafaga", burst)
-        rafaga = np.zeros(t)
-        print(rafaga)
+        #   μ ≥ e[j] ⋅ D−
+    def verificar_t(lugares, maxinput, t, tr):
+        marks = []
+        for i in range(len(lugares)):
+            marks.append(lugares[i].tokens)
         ej = np.zeros(t)
-        print(lugares)
+        print("verificar transicion: ", tr)
+        ej[int(tr[1])] = 1
+        # print("e[j]",ej)
+        ver = np.dot(ej, maxinput)
+        if (np.all(ver <= marks)):
+            return True
+        else:
+            return False
+
+        # μ + e[j] ⋅ D
+    def disparar(lugares, maxd, t, maxinput, ts):
+        m_actual = []
+        ej = np.zeros(ts)
+        for i in range(len(lugares)):
+            m_actual.append(lugares[i].tokens)
+        print("marcacion actual", m_actual)
+        print("disparo transicion: ", t)
+        ver = Arc.verificar_t(lugares, maxinput, ts, t)
+        if (ver == True):
+            print("transicion habilitada")
+            ej[int(t[1])] = 1
+            d = m_actual+np.dot(ej, maxd)
+            print("disparando.....")
+            for i in range(len(lugares)):
+                lugares[i].tokens = d[i]
+            print(lugares.tokens)
+            return print("marcacion actual", d)
+        else:
+            return ("no permite disparar")
+
+    #disparar en orden rafaga
+    def disparar_rafaga(lugares, transicions, maxd, rafaga, maxinput):
+        m_actual = []
+        ej = np.zeros(len(transicions))
+        ez = np.zeros(len(transicions))
+        for i in range(len(lugares)):
+            m_actual.append(lugares[i].tokens)
+        print("marcacion actual", m_actual)
+        for i in range(len(rafaga)):
+            if (Arc.verificar_t(lugares, maxinput, len(transicions), rafaga[i]) == True):
+                print("disparo en secuencia: ", rafaga[i])
+                ej[int(rafaga[i][1])] = 1
+                print(ej)
+                print("disparando transicion: ", rafaga[i])
+                m_actual = m_actual+np.dot(ej, maxd)
+                ej = np.zeros(len(transicions))
+                for i in range(len(lugares)):
+                    lugares[i].tokens = m_actual[i]
+                print("disparando.....")
+                print("marcacion actual", m_actual)
+            else:
+                print("no permite disparar")
+        return print()
+    
+    # δ(μ, σ) = μ + f(σ) ⋅ D
+    def disparar_rafaga_final(lugares, transicions, maxd, rafaga, maxinput):
         initial_marking = [p.tokens for p in lugares]
         print(initial_marking)
-        v = [1, 2, 2]
-        for i in range(len(burst)):
-            ts = int(burst[i].replace("t", ""))
-            print("raf", ts)
-            if(burst[i] in burst):
-                rafaga[ts] += 1
+        rafagas = np.zeros(len(transicions))
+        for i in range(len(rafaga)):
+            ts = int(rafaga[i].replace("t", ""))
+            if (rafaga[i] in rafaga and Arc):
+                rafagas[ts] += 1
             else:
-                rafaga[ts] = rafaga[ts]
-        print("rafaga", rafaga)
-        disparos = initial_marking+np.dot(rafaga, maxd)
-        print("disparos", disparos)
-        #t_enables = t_enable(disparos, rafaga, maxinput)
-        #print("disa",t_enables)
-        print(disparos)
-        for i in range(len(burst)):
-            print()
-            print("burst", burst[i])
-            print()
-            ej[int(burst[i].replace("t", ""))] = 1
-            print("ej", ej)
-            disparo = initial_marking+np.dot(ej, maxd)
-            print("disparo com", disparo)
+                rafagas[ts] = rafagas[ts]
+        print("rafaga", rafagas)
+        final_marking = initial_marking+np.dot(rafagas, maxd)
         for i in range(len(lugares)):
-            up = disparo[i]
-            a = petry.Place.update_tokens(lugares[i], up)
-
-        return disparo
-
-def t_enable(m_inicial, transi, maxinput):
-    enable_transition = []
-    ej = np.zeros(len(transi))
-    u = m_inicial
-    for tr in transi:
-        t = int(tr[1])
-        print(t)
-        ej[t] = 1
-        mul = np.dot(ej, maxinput)
-        ej = np.zeros(len(transi))
-        if((u >= mul).all()):
-            enable_transition.append(tr)
-    return enable_transition
-
-
-# def t_enables():
-#     enable_transition = []
-#     ej = np.zeros(len(transi))
-#     u = m_inicial
-#     for tr in transi:
-#         t = int(tr[1])
-#         print(t)
-#         ej[t] = 1
-#         mul = np.dot(ej, maxinput)
-#         ej = np.zeros(len(transi))
-#         if((u >= mul).all()):
-#             enable_transition.append(tr)
-#     return enable_transition
-
-    
-
+            lugares[i].tokens = m_actual[i]
+        return print(final_marking)
 
 
 if __name__ == "__main__":
 
-    p = pr.PetriNet("red.json")
+    p = pr.PetriNet("red2.json")
     p.red_inicial()

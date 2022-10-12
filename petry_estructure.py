@@ -14,7 +14,8 @@ class Place:
     def update_tokens(self, tokens: int):
         self.tokens = tokens
     
-
+    
+ 
 
 class transition1:
     def __init__(self, nombre:str):

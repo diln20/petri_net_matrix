@@ -121,13 +121,13 @@ class Arc:
         return transis
 
         #   μ ≥ e[j] ⋅ D−
-    def verificar_t(lugares, maxinput, t, tr,input):
+    def verificar_t(lugares, maxinput, t, tr, input):
         marks = []
         for i in range(len(lugares)):
             marks.append(lugares[i].tokens)
         ej = np.zeros(t)
         print("verificar transicion: ", tr)
-        if(input != True):
+        if (input != True):
             ej[int(tr[0].replace("t", ""))] = 1
         else:
             ej[int(tr[1])] = 1
@@ -139,18 +139,18 @@ class Arc:
             return False
 
         # μ + e[j] ⋅ D
-    def disparar(lugares, maxd, t, maxinput, ts,input):
+    def disparar(lugares, maxd, t, maxinput, ts, input):
         m_actual = []
         ej = np.zeros(ts)
         for i in range(len(lugares)):
             m_actual.append(lugares[i].tokens)
         print("marcacion actual", m_actual)
         print("disparo transicion: ", t)
-        ver = Arc.verificar_t(lugares, maxinput, ts, t,input)
+        ver = Arc.verificar_t(lugares, maxinput, ts, t, input)
         if (ver == True):
             print("transicion habilitada")
             print(t)
-            if(input != True):
+            if (input != True):
                 ej[int(t[0].replace("t", ""))] = 1
             else:
                 ej[int(t[1])] = 1
@@ -172,7 +172,7 @@ class Arc:
             m_actual.append(lugares[i].tokens)
         print("marcacion actual", m_actual)
         for i in range(len(rafaga)):
-            if (Arc.verificar_t(lugares, maxinput, len(transicions), rafaga[i],True) == True):
+            if (Arc.verificar_t(lugares, maxinput, len(transicions), rafaga[i], True) == True):
                 ej[int(rafaga[i][1])] = 1
                 print(ej)
                 print("disparando transicion: ", rafaga[i])
@@ -223,13 +223,14 @@ if __name__ == "__main__":
         elif menuprincipal == 3:
             print("disparar una transicion: ")
             print()
-            Arc.disparar(lugares, maxd, shot, maxinput, len(transitions),False)
+            Arc.disparar(lugares, maxd, shot, maxinput,
+                         len(transitions), False)
             grafico_disparo(lugares, transitions, maxOut, maxInput)
         elif menuprincipal == 4:
             print("disparar una transicion por teclado: ")
             print()
             a = str(input("digite transicion: "))
-            Arc.disparar(lugares, maxd, a, maxinput, len(transitions),True)
+            Arc.disparar(lugares, maxd, a, maxinput, len(transitions), True)
             grafico_disparo(lugares, transitions, maxOut, maxInput)
         elif menuprincipal == 5:
             print("disparar una rafaga: ")

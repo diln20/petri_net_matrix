@@ -206,7 +206,6 @@ class Arc:
 
 
 if __name__ == "__main__":
-
     menuprincipal = int(
         input("Menu Principal\n1. Cargar json\n2. Cargar Red Petri\n3. Disparar transición\n4. Disparar transicion por teclado\n5. disparar rafaga\n6. disparar rafaga sin secuencia\n Salir\n"))
     print()
@@ -225,13 +224,13 @@ if __name__ == "__main__":
             print()
             Arc.disparar(lugares, maxd, shot, maxinput,
                          len(transitions), False)
-            grafico_disparo(lugares, transitions, maxOut, maxInput)
+            gf.graviz.grafico_disparo(lugares, transitions, maxout, maxinput)
         elif menuprincipal == 4:
             print("disparar una transicion por teclado: ")
             print()
             a = str(input("digite transicion: "))
             Arc.disparar(lugares, maxd, a, maxinput, len(transitions), True)
-            grafico_disparo(lugares, transitions, maxOut, maxInput)
+            gf.graviz.grafico_disparo(lugares, transitions, maxout, maxinput)
         elif menuprincipal == 5:
             print("disparar una rafaga: ")
             Arc.disparar_rafaga(

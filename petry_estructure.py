@@ -32,30 +32,27 @@ class input_transitions():
         self.place = place
         self.transitio = transitio
         self.weight = weight
-        self.tokens = tokens
 
     def __repr__(self):
-        return "({} -> tk: {} -{} w: {})".format(self.place, self.tokens, self.transitio, self.weight)
+        return "({} -> t: {} w: {})".format(self.place, self.transitio, self.weight)
 
     def __str__(self):
         return self.__repr__()
     
-    def update_weight(self, weight: int):
-        self.weight = weight
+
 
 class out_transitions():
     def __init__(self, transitio: str, place: str, tokens: int, weight: int):
         self.transitio = transitio
         self.place = place
         self.weight = weight
-        self.tokens = tokens
+        
 
     def __repr__(self):
-        return "({} -> {} tk:{} w: {})".format(self.transitio, self.place, self.tokens, self.weight)
+        return "({} -> {}  w: {})".format(self.transitio, self.place,  self.weight)
 
     def __str__(self):
         return self.__repr__()
     
-    def update_weight(self, weight: int):
-        self.weight = weight
+
         

@@ -18,14 +18,8 @@ class PetriNet:
         transitions = []
         shot = []
         burst = []
-        #print("Red inicial")
-        # print()
-        # print("marcacion_inicial")
-        # print()
         for mi in red_petri['m_i']:
             m_inicial.append(mi)
-        # print(m_inicial)
-        # print()
         for p in red_petri['Places']:
             lugares.append(petry.Place(p['name'], p['tokens']))
         for t in red_petri['Transitions']:
@@ -41,33 +35,33 @@ class PetriNet:
         maxinput = Arc.matrixinput(transitions_input, lugares, transitions)
         maxout = Arc.matrixout(transitions_out, lugares, transitions)
         maxd = Arc.matrixdmax(maxinput, maxout)
-        rafaga = ["t2", "t1", "t2", "t1", "t0"]
-        Arc.disparar_rafaga_final(lugares, transitions, maxd, rafaga, maxinput)
-        gf.graviz.grafico_inicial(lugares, transitions,  maxinput, maxout)
-        #print("Matriz Dmax")
-        # print()
-        # print(maxd)
-        # print()
-        #print("Transiciones habilitadas")
-        # print()
-        # enable_transition = Arc.t_enable(
-        #     m_inicial, transitions, maxinput)
-        # print("transiciones disponibles", enable_transition)
-        # shot_check = Arc.verificar_rafaga(burst, enable_transition)
-        #print("transiciones de la rafaga disponibles", shot_check)
-        #rafaga(m_inicial, maxd, burst)
-        # m_actual = Arc.disparo_t(
-        #    lugares, m_inicial, maxd, shot, enable_transition, len(transitions), maxinput, maxout)
-        #print("marcacion actual", m_actual)
-        #gf.graviz.grafico_disparo(lugares, transitions,  maxinput, maxout)
-        # print()
-        # raf = Arc.rafaga(lugares, m_inicial, maxd, burst,
-        #                  len(transitions), maxinput)
-        #gf.graviz.grafico_disparo(lugares, transitions,  maxinput, maxout)
-        #t = Arc.verificar_t(lugares, maxinput, len(transitions),"t2")
-        # print("validacion",t)
-        #Arc.disparar(lugares, maxd, "t2",maxinput, len(transitions))
-        return print()
+        print("Red inicial")
+        print()
+        print("m_inicial: ", m_inicial)
+        print()
+        print("Lugares: ", lugares)
+        print()
+        print("Transiciones: ", transitions)
+        print()
+        print("Arcos de entrada: ", transitions_input)
+        print()
+        print("Arcos de salida: ", transitions_out)
+        print()
+        print("Matriz de entrada: ")
+        print(maxinput)
+        print()
+        print("Matriz de salida: ")
+        print(maxout)
+        print()
+        print("Matriz de disparo: ")
+        print(maxd)
+        print()
+        print("Shot: ", shot)
+        print()
+        print("Burst: ", burst)
+        print()
+        print("--------------------------------------------------")
+        return m_inicial, lugares, transitions, transitions_input, transitions_out, maxinput, maxout, maxd, shot, burst
 
 
 class Arc:
@@ -127,13 +121,16 @@ class Arc:
         return transis
 
         #   μ ≥ e[j] ⋅ D−
-    def verificar_t(lugares, maxinput, t, tr):
+    def verificar_t(lugares, maxinput, t, tr,input):
         marks = []
         for i in range(len(lugares)):
             marks.append(lugares[i].tokens)
         ej = np.zeros(t)
         print("verificar transicion: ", tr)
-        ej[int(tr[1])] = 1
+        if(input != True):
+            ej[int(tr[0].replace("t", ""))] = 1
+        else:
+            ej[int(tr[1])] = 1
         # print("e[j]",ej)
         ver = np.dot(ej, maxinput)
         if (np.all(ver <= marks)):
@@ -142,27 +139,31 @@ class Arc:
             return False
 
         # μ + e[j] ⋅ D
-    def disparar(lugares, maxd, t, maxinput, ts):
+    def disparar(lugares, maxd, t, maxinput, ts,input):
         m_actual = []
         ej = np.zeros(ts)
         for i in range(len(lugares)):
             m_actual.append(lugares[i].tokens)
         print("marcacion actual", m_actual)
         print("disparo transicion: ", t)
-        ver = Arc.verificar_t(lugares, maxinput, ts, t)
+        ver = Arc.verificar_t(lugares, maxinput, ts, t,input)
         if (ver == True):
             print("transicion habilitada")
-            ej[int(t[1])] = 1
+            print(t)
+            if(input != True):
+                ej[int(t[0].replace("t", ""))] = 1
+            else:
+                ej[int(t[1])] = 1
             d = m_actual+np.dot(ej, maxd)
             print("disparando.....")
             for i in range(len(lugares)):
                 lugares[i].tokens = d[i]
-            print(lugares.tokens)
             return print("marcacion actual", d)
-        else:
-            return ("no permite disparar")
 
-    #disparar en orden rafagas
+        else:
+            return print("no permite disparar")
+
+    # disparar en orden rafagas
     def disparar_rafaga(lugares, transicions, maxd, rafaga, maxinput):
         m_actual = []
         ej = np.zeros(len(transicions))
@@ -171,8 +172,7 @@ class Arc:
             m_actual.append(lugares[i].tokens)
         print("marcacion actual", m_actual)
         for i in range(len(rafaga)):
-            if (Arc.verificar_t(lugares, maxinput, len(transicions), rafaga[i]) == True):
-                print("disparo en secuencia: ", rafaga[i])
+            if (Arc.verificar_t(lugares, maxinput, len(transicions), rafaga[i],True) == True):
                 ej[int(rafaga[i][1])] = 1
                 print(ej)
                 print("disparando transicion: ", rafaga[i])
@@ -181,11 +181,12 @@ class Arc:
                 for i in range(len(lugares)):
                     lugares[i].tokens = m_actual[i]
                 print("disparando.....")
-                print("marcacion actual", m_actual)
+                print("marcacion actualizada", m_actual)
+                print()
             else:
                 print("no permite disparar")
         return print()
-    
+
     # δ(μ, σ) = μ + f(σ) ⋅ D
     def disparar_rafaga_final(lugares, transicions, maxd, rafaga, maxinput):
         initial_marking = [p.tokens for p in lugares]
@@ -206,5 +207,41 @@ class Arc:
 
 if __name__ == "__main__":
 
-    p = pr.PetriNet("red2.json")
-    p.red_inicial()
+    menuprincipal = int(
+        input("Menu Principal\n1. Cargar json\n2. Cargar Red Petri\n3. Disparar transición\n4. Disparar transicion por teclado\n5. disparar rafaga\n6. disparar rafaga sin secuencia\n Salir\n"))
+    print()
+    while menuprincipal != 0:
+        if (menuprincipal == 1):
+            print("Cargar json: ")
+            red = str(input('ingrese_nombre del json: '))
+            p = pr.PetriNet(red+".json")
+        elif menuprincipal == 2:
+            print("Cargar Red Petri y mostrar")
+            (m_inicial, lugares, transitions, transitions_input, transitions_out,
+             maxinput, maxout, maxd, shot, burst) = p.red_inicial()
+            gf.graviz.grafico_inicial(lugares, transitions,  maxinput, maxout)
+        elif menuprincipal == 3:
+            print("disparar una transicion: ")
+            print()
+            Arc.disparar(lugares, maxd, shot, maxinput, len(transitions),False)
+            grafico_disparo(lugares, transitions, maxOut, maxInput)
+        elif menuprincipal == 4:
+            print("disparar una transicion por teclado: ")
+            print()
+            a = str(input("digite transicion: "))
+            Arc.disparar(lugares, maxd, a, maxinput, len(transitions),True)
+            grafico_disparo(lugares, transitions, maxOut, maxInput)
+        elif menuprincipal == 5:
+            print("disparar una rafaga: ")
+            Arc.disparar_rafaga(
+                lugares, transitions, maxd, burst, maxinput)
+            gf.graviz.grafico_disparo(lugares, transitions,  maxinput, maxout)
+        elif menuprincipal == 6:
+            print("disparar una rafaga sin secuencia: ")
+            Arc.disparar_rafaga_final(
+                lugares, transitions, maxd, burst, maxinput)
+            gf.graviz.grafico_disparo(lugares, transitions,  maxinput, maxout)
+        else:
+            print("Opcion no valida")
+        menuprincipal = int(
+            input("Menu Principal\n1. Cargar Red Petri\n2. Mostrar Red Petri\n3. Disparar transición\n4. Disparar transicion por teclado\n5. disparar rafaga\n6. disparar rafaga sin secuencia\n Salir\n"))

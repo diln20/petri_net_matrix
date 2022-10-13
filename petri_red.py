@@ -43,7 +43,7 @@ class PetriNet:
         maxd = Arc.matrixdmax(maxinput, maxout)
         rafaga = ["t2", "t1", "t2", "t1", "t0"]
         Arc.disparar_rafaga_final(lugares, transitions, maxd, rafaga, maxinput)
-        #gf.graviz.grafico_inicial(lugares, transitions,  maxinput, maxout)
+        gf.graviz.grafico_inicial(lugares, transitions,  maxinput, maxout)
         #print("Matriz Dmax")
         # print()
         # print(maxd)
@@ -193,14 +193,14 @@ class Arc:
         rafagas = np.zeros(len(transicions))
         for i in range(len(rafaga)):
             ts = int(rafaga[i].replace("t", ""))
-            if (rafaga[i] in rafaga and Arc):
+            if (rafaga[i] in rafaga):
                 rafagas[ts] += 1
             else:
                 rafagas[ts] = rafagas[ts]
         print("rafaga", rafagas)
         final_marking = initial_marking+np.dot(rafagas, maxd)
         for i in range(len(lugares)):
-            lugares[i].tokens = m_actual[i]
+            lugares[i].tokens = final_marking[i]
         return print(final_marking)
 
 

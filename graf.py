@@ -5,7 +5,7 @@ import numpy as np
 class graviz:
     def grafico_inicial(places, transitions, mOutput, mInput):
     
-        f = Digraph('PetriNet')
+        f = Digraph('PetriNet', filename='PetriNet', format='png')
         for i in transitions:
             f.attr('node', shape='box')
             f.node(i, label=i.upper())
